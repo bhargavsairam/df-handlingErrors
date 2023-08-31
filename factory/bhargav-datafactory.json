@@ -1,0 +1,9 @@
+{
+	"name": "bhargav-datafactory",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "babf2dd7-b6e6-4e66-8ab8-15ecfc44f1b0",
+		"tenantId": "704d822c-358a-4784-9a16-49e20b75f941"
+	}
+}
