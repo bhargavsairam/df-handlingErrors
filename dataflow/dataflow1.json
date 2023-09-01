@@ -1,0 +1,64 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "salesIND",
+						"type": "DatasetReference"
+					},
+					"name": "salesIND"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "outputCSVfiles",
+						"type": "DatasetReference"
+					},
+					"name": "errorRows"
+				}
+			],
+			"transformations": [
+				{
+					"name": "split1"
+				},
+				{
+					"name": "fileNameAddingForErrorRows"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          saleDate as string,",
+				"          salesItem as string,",
+				"          Country as string,",
+				"          Quantity as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> salesIND",
+				"salesIND split(isNull(toDate(saleDate, 'dd-MMM-yyyy')),",
+				"     disjoint: false) ~> split1@(errorRows, goodRows)",
+				"split1@errorRows derive(fileName = 'SalesIND_2020_May_01.csv') ~> fileNameAddingForErrorRows",
+				"fileNameAddingForErrorRows sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['errorData.csv'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          saleDate,",
+				"          salesItem,",
+				"          Country,",
+				"          Quantity,",
+				"          fileName",
+				"     ),",
+				"     partitionBy('hash', 1)) ~> errorRows"
+			]
+		}
+	}
+}

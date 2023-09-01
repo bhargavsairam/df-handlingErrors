@@ -1,0 +1,37 @@
+{
+	"name": "table_sales_bad_dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServer1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "saleDate",
+				"type": "varchar"
+			},
+			{
+				"name": "SalesItem",
+				"type": "varchar"
+			},
+			{
+				"name": "country",
+				"type": "varchar"
+			},
+			{
+				"name": "quantity",
+				"type": "varchar"
+			},
+			{
+				"name": "fileName",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "tbl_sales_bad"
+		}
+	}
+}
