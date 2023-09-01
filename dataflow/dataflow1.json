@@ -19,6 +19,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "errorRows"
+				},
+				{
+					"dataset": {
+						"referenceName": "outputCSVfiles",
+						"type": "DatasetReference"
+					},
+					"name": "goodRows"
 				}
 			],
 			"transformations": [
@@ -27,6 +34,9 @@
 				},
 				{
 					"name": "fileNameAddingForErrorRows"
+				},
+				{
+					"name": "fileNameAddingForGoodRows"
 				}
 			],
 			"scriptLines": [
@@ -42,6 +52,7 @@
 				"salesIND split(isNull(toDate(saleDate, 'dd-MMM-yyyy')),",
 				"     disjoint: false) ~> split1@(errorRows, goodRows)",
 				"split1@errorRows derive(fileName = 'SalesIND_2020_May_01.csv') ~> fileNameAddingForErrorRows",
+				"split1@goodRows derive(fileName = 'SalesIND_2020_May_01.csv') ~> fileNameAddingForGoodRows",
 				"fileNameAddingForErrorRows sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['errorData.csv'],",
@@ -57,7 +68,16 @@
 				"          Quantity,",
 				"          fileName",
 				"     ),",
-				"     partitionBy('hash', 1)) ~> errorRows"
+				"     partitionBy('hash', 1)) ~> errorRows",
+				"fileNameAddingForGoodRows sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['goodData.csv'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> goodRows"
 			]
 		}
 	}
