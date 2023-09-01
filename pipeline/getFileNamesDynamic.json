@@ -96,7 +96,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "salesDataInputDataset",
+									"referenceName": "salesInputDatasetWithParameter",
 									"type": "DatasetReference",
 									"parameters": {
 										"FileName": {
