@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "handle_error_rows",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
