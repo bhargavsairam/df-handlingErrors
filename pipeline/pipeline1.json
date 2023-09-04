@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "incremental-copy",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -58,7 +58,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DelimitedText1",
+						"referenceName": "incrementalCopyDataset",
 						"type": "DatasetReference"
 					}
 				],
