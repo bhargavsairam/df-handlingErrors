@@ -1,0 +1,64 @@
+{
+	"name": "fixedLengthCorrectionDataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "EmployeeRawData"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "employeeOutputFile",
+						"type": "DatasetReference"
+					},
+					"name": "EmployeeOutput"
+				}
+			],
+			"transformations": [
+				{
+					"name": "addingNewColumnData"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Column_1 as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> EmployeeRawData",
+				"EmployeeRawData derive(EmpId = substring(Column_1,1,1),",
+				"          EmpName = substring(Column_1,2,7),",
+				"          EmpState = substring(Column_1,11,2),",
+				"          EmpNumber = substring(Column_1,13,7)) ~> addingNewColumnData",
+				"addingNewColumnData select(mapColumn(",
+				"          EmpId,",
+				"          EmpName,",
+				"          EmpState,",
+				"          EmpNumber",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['EmployeeFile'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     outputAssertFailedRows: true,",
+				"     partitionBy('hash', 1)) ~> EmployeeOutput"
+			]
+		}
+	}
+}
