@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Data flow1",
+				"name": "Handling_Duplicates_Considering_first_coming_value",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
