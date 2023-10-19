@@ -56,10 +56,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "DelimitedText9",
+						"referenceName": "DelimitedText11",
 						"type": "DatasetReference",
 						"parameters": {
-							"logFileName": {
+							"LogFileName": {
 								"value": "@variables('logFileName')",
 								"type": "Expression"
 							}
@@ -69,7 +69,7 @@
 						"exists"
 					],
 					"storeSettings": {
-						"type": "AzureBlobFSReadSettings",
+						"type": "AzureBlobStorageReadSettings",
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {

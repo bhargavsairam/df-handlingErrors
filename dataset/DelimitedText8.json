@@ -19,7 +19,7 @@
 					"value": "@dataset().logFileName",
 					"type": "Expression"
 				},
-				"folderPath": "log"
+				"fileSystem": "outputfiles"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
