@@ -133,14 +133,6 @@
 											"value": "'@{variables('logFileName')}'",
 											"type": "Expression"
 										}
-									},
-									"datasetParameters": {
-										"sink1": {
-											"logFileName": {
-												"value": "@variables('logFileName')",
-												"type": "Expression"
-											}
-										}
 									}
 								},
 								"compute": {
