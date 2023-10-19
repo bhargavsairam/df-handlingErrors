@@ -1,18 +1,58 @@
 {
-	"name": "dataflow1",
+	"name": "runningTotal_Dataflow",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
-					"name": "source1"
+					"dataset": {
+						"referenceName": "DelimitedText5",
+						"type": "DatasetReference"
+					},
+					"name": "inputDataset"
 				}
 			],
-			"sinks": [],
-			"transformations": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText6",
+						"type": "DatasetReference"
+					},
+					"name": "RunningTotalSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "window1"
+				}
+			],
 			"scriptLines": [
-				"source(allowSchemaDrift: true,",
-				"     validateSchema: false) ~> source1"
+				"source(output(",
+				"          PurchasedOrder as string,",
+				"          ItemName as string,",
+				"          Quantity as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> inputDataset",
+				"inputDataset window(asc(Quantity, true),",
+				"     RunningTotal = toString(sum(toInteger(Quantity)))) ~> window1",
+				"window1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EmpId as string,",
+				"          EmpName as string,",
+				"          EmpState as string,",
+				"          EmpNumber as string,",
+				"          Gender as string",
+				"     ),",
+				"     partitionFileNames:['running_total_file'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> RunningTotalSink"
 			]
 		}
 	}
