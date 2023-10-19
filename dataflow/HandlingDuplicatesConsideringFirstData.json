@@ -1,0 +1,75 @@
+{
+	"name": "HandlingDuplicatesConsideringFirstData",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Emp_dataset",
+						"type": "DatasetReference"
+					},
+					"name": "EmployeeFile"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText2",
+						"type": "DatasetReference"
+					},
+					"name": "EmployeeNewFile"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText3",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "union1"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "SortingEmpID"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EmpId as string,",
+				"          EmpName as string,",
+				"          EmpState as string,",
+				"          EmpNumber as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> EmployeeFile",
+				"source(output(",
+				"          EmpId as string,",
+				"          EmpName as string,",
+				"          EmpState as string,",
+				"          EmpNumber as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> EmployeeNewFile",
+				"EmployeeFile, EmployeeNewFile union(byName: true)~> union1",
+				"union1 aggregate(groupBy(EmpId),",
+				"     each(match(name != 'EmpId'), $$ = first($$))) ~> aggregate1",
+				"aggregate1 sort(asc(EmpId, true)) ~> SortingEmpID",
+				"SortingEmpID sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['Employees_combined'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}
